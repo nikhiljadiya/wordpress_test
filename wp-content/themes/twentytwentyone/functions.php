@@ -666,3 +666,24 @@ require_once(get_template_directory() . '/inc/custom-post-type.php');
 
 #### Custom Fields Of Job Post Type ####
 require_once(get_template_directory() . '/inc/custom-fields-job.php');
+
+// Add the custom columns to the book post type:
+add_filter( 'manage_jobs_posts_columns', 'set_custom_edit_job_columns' );
+function set_custom_edit_job_columns($columns) {
+    unset( $columns['job_salary'] );
+    $columns['job_salary'] = __( 'Job Salary', 'twentytwentyone' );
+
+    return $columns;
+}
+
+// Add the data to the custom columns for the book post type:
+add_action( 'manage_jobs_posts_custom_column' , 'custom_job_column', 10, 2 );
+function custom_job_column( $column, $post_id ) {
+    switch ( $column ) {
+
+        case 'job_salary' :
+            echo get_post_meta( $post_id , 'job_salary' , true );
+            break;
+
+    }
+}
